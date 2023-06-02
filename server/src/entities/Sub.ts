@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import BaseEntity from './Entity';
 import { Expose } from 'class-transformer';
+import { User } from './User';
 
 @Entity('subs')
 export default class Sub extends BaseEntity {
