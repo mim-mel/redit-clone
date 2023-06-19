@@ -1,70 +1,79 @@
-import { BeforeInsert, Column, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import BaseEntity from './Entity';
 import { Exclude, Expose } from 'class-transformer';
 import { User } from './User';
 import Sub from './Sub';
+import Vote from './Vote';
 import { makeId, slugify } from '../helper/helper';
+import Comment from './Comment';
 
 export default class Post extends BaseEntity {
-    @Index()
-    @Column()
-    identifier: string
+  @Index()
+  @Column()
+  identifier: string;
 
-    @Column()
-    title: string
-    
-    @Index()
-    @Column()
-    slug: string
-    
-    @Column({nullable: true, type: 'text'})
-    body: string
-        
-    @Column()
-    subname: string
+  @Column()
+  title: string;
 
-    @Column()
-    username: string
+  @Index()
+  @Column()
+  slug: string;
 
-    @ManyToOne(() => User, (user) => user.posts)
-    @JoinColumn({ name: 'username', referencedColumnName: 'usernmae' })
-    user: User;
+  @Column({ nullable: true, type: 'text' })
+  body: string;
 
-    @ManyToOne(() => Sub, (sub) => sub.posts)
-    @JoinColumn({ name: 'subname', referencedColumnName: 'name' })
-    sub: Sub;
+  @Column()
+  subname: string;
 
-    @Exclude()
-    @OneToMany(() => Comment, (comment) => comment.post)
-    comments: Comment[];
+  @Column()
+  username: string;
 
-    @Exclude()
-    @OneToMany(() => Vote, (voote) => voote.post)
-    votes: Vote[];
+  @ManyToOne(() => User, user => user.posts)
+  @JoinColumn({ name: 'username', referencedColumnName: 'usernmae' })
+  user: User;
 
-    @Expose() get url():string {
-        return `r/${this.subname}/${this.identifier}/${this.slug}`
-    }
+  @ManyToOne(() => Sub, sub => sub.posts)
+  @JoinColumn({ name: 'subname', referencedColumnName: 'name' })
+  sub: Sub;
 
-    @Expose() get commentCount(): number {
-        return this.comments?.length;
-    }
+  @Exclude()
+  @OneToMany(() => Comment, comment => comment.post)
+  comments: Comment[];
 
-    @Expose() get voteScore(): number {
-        return this.votes?.reduce((memo, curt) => memo + (curt.value || 0), 0)
-    }
+  @Exclude()
+  @OneToMany(() => Vote, vote => vote.post)
+  votes: Vote[];
 
-    protected userVote: number;
+  @Expose() get url(): string {
+    return `r/${this.subname}/${this.identifier}/${this.slug}`;
+  }
 
-    setUserVote(user: User) {
-        const index = this.votes?.findIndex(v => v.username === user.username);
-        this.userVote = index > -1 ? this.votes[index].value : 0;
-    }
+  @Expose() get commentCount(): number {
+    return this.comments?.length;
+  }
 
-    @BeforeInsert()
-    makeIdAndSlug() {
-        //makeId, slugify 함수는 helper.ts 파일에 정의됨
-        this.identifier = makeId(7);
-        this.slug = slugify(this.title);
-    }
+  @Expose() get voteScore(): number {
+    return this.votes?.reduce((memo, curt) => memo + (curt.value || 0), 0);
+  }
+
+  protected userVote: number;
+
+  setUserVote(user: User) {
+    const index = this.votes?.findIndex(v => v.username === user.username);
+    this.userVote = index > -1 ? this.votes[index].value : 0;
+  }
+
+  @BeforeInsert()
+  makeIdAndSlug() {
+    //makeId, slugify 함수는 helper.ts 파일에 정의됨
+    this.identifier = makeId(7);
+    this.slug = slugify(this.title);
+  }
 }
