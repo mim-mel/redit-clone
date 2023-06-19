@@ -1,3 +1,4 @@
+import { Exclude, Expose } from 'class-transformer';
 import {
   BeforeInsert,
   Column,
@@ -7,12 +8,11 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import BaseEntity from './Entity';
-import { Exclude, Expose } from 'class-transformer';
-import Post from './Post';
-import { User } from './User';
-import Vote from './Vote';
 import { makeId } from '../helper/helper';
+import BaseEntity from './Entity';
+import Post from './Post';
+import Vote from './Vote';
+import { User } from './User';
 
 @Entity('comments')
 export default class Comment extends BaseEntity {
@@ -42,16 +42,11 @@ export default class Comment extends BaseEntity {
 
   protected userVote: number;
 
-  //findIndex 함수를 사용
-  //일치하는 값이 없다면 findIndex는 -1값을 리턴함
-  setUserVotes(user: User) {
-    const index = this.votes?.findIndex(
-      vote => vote.username === user.username
-    );
+  setUserVote(user: User) {
+    const index = this.votes?.findIndex(v => v.username === user.username);
     this.userVote = index > -1 ? this.votes[index].value : 0;
   }
 
-  //reduce 함수를 이용해 point 결과값을 합쳐줌
   @Expose() get voteScore(): number {
     const initialValue = 0;
     return this.votes?.reduce(

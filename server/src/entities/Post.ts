@@ -1,3 +1,4 @@
+import { Exclude, Expose } from 'class-transformer';
 import {
   BeforeInsert,
   Column,
@@ -6,13 +7,12 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import BaseEntity from './Entity';
-import { Exclude, Expose } from 'class-transformer';
-import { User } from './User';
-import Sub from './Sub';
-import Vote from './Vote';
 import { makeId, slugify } from '../helper/helper';
 import Comment from './Comment';
+import BaseEntity from './Entity';
+import Sub from './Sub';
+import { User } from './User';
+import Vote from './Vote';
 
 export default class Post extends BaseEntity {
   @Index()

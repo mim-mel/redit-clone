@@ -10,9 +10,10 @@ import {
 import bcrypt from 'bcryptjs';
 import Post from './Post';
 import Vote from './Vote';
+import BaseEntity from './Entity';
 
 @Entity('users')
-export class User {
+export class User extends BaseEntity {
   @Index()
   @IsEmail(undefined, { message: '이메일 형식으로 입력해 주세요' })
   @Length(1, 255, { message: '이메일 주소는 비워둘 수 없습니다' })

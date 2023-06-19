@@ -29,7 +29,7 @@ export default class Sub extends BaseEntity {
   @Column({ nullable: true })
   bannerUrn: string;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   // 유저 한명이 여러개의 커뮤니티를 생성할 수 있음
