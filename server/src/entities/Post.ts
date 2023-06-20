@@ -2,18 +2,20 @@ import { Exclude, Expose } from 'class-transformer';
 import {
   BeforeInsert,
   Column,
+  Entity,
   Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { makeId, slugify } from '../helper/helper';
+import { makeId, slugify } from '../utils/helpers';
 import Comment from './Comment';
 import BaseEntity from './Entity';
 import Sub from './Sub';
 import { User } from './User';
 import Vote from './Vote';
 
+@Entity('posts')
 export default class Post extends BaseEntity {
   @Index()
   @Column()
@@ -30,17 +32,17 @@ export default class Post extends BaseEntity {
   body: string;
 
   @Column()
-  subname: string;
+  subName: string;
 
   @Column()
   username: string;
 
   @ManyToOne(() => User, user => user.posts)
-  @JoinColumn({ name: 'username', referencedColumnName: 'usernmae' })
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User;
 
   @ManyToOne(() => Sub, sub => sub.posts)
-  @JoinColumn({ name: 'subname', referencedColumnName: 'name' })
+  @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
   sub: Sub;
 
   @Exclude()
@@ -52,7 +54,7 @@ export default class Post extends BaseEntity {
   votes: Vote[];
 
   @Expose() get url(): string {
-    return `r/${this.subname}/${this.identifier}/${this.slug}`;
+    return `/r/${this.subName}/${this.identifier}/${this.slug}`;
   }
 
   @Expose() get commentCount(): number {
@@ -72,7 +74,6 @@ export default class Post extends BaseEntity {
 
   @BeforeInsert()
   makeIdAndSlug() {
-    //makeId, slugify 함수는 helper.ts 파일에 정의됨
     this.identifier = makeId(7);
     this.slug = slugify(this.title);
   }

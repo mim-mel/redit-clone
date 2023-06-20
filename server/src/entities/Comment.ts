@@ -8,11 +8,11 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { makeId } from '../helper/helper';
+import { makeId } from '../utils/helpers';
 import BaseEntity from './Entity';
 import Post from './Post';
-import Vote from './Vote';
 import { User } from './User';
+import Vote from './Vote';
 
 @Entity('comments')
 export default class Comment extends BaseEntity {
