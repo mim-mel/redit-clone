@@ -1,11 +1,25 @@
 import express from 'express';
 import morgan from 'morgan';
 import { AppDataSource } from './data-source';
+import authRoutes from './routes/auth';
+import cors from 'cors';
 
 const app = express();
 
+//cors 설정
+const origin = 'http://localhost:3000';
+app.use(
+  cors({
+    origin,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(morgan('dev'));
+
+//routes import
+app.use('/api/auth', authRoutes);
 
 //app.get url로 접속하면 해당 블록의 코드를 실행
 app.get('/', (_, res) => res.send('running'));
